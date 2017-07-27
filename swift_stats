@@ -1,0 +1,34 @@
+#!/bin/sh
+
+## Replication
+
+#[replication_failure] low: 0, high: 0, avg: 0.0, total: 0, Failed: 0.0%, no_result: 0, reported: 3
+#[replication_success] low: 1018, high: 4084, avg: 2042.0, total: 6126, Failed: 0.0%, no_result: 0, reported: 3
+#[replication_time] low: 0, high: 0, avg: 0.1, total: 0, Failed: 0.0%, no_result: 0, reported: 3
+#[replication_attempted] low: 509, high: 2042, avg: 1021.0, total: 3063, Failed: 0.0%, no_result: 0, reported: 3
+
+
+SWIFTRECON=`swift-recon -r | tr '\n' '~'`
+
+REPFAILURE=`echo $SWIFTRECON | tr '~' '\n' | grep replication_failure | cut -d ' ' -f3,5,7,9,11,13,15 | sed s/,//g | sed s/%//g`
+REPSUCCESS=`echo $SWIFTRECON | tr '~' '\n' | grep replication_success | cut -d ' ' -f3,5,7,9,11,13,15 | sed s/,//g | sed s/%//g`
+REPTIME=`echo $SWIFTRECON | tr '~' '\n' | grep replication_time | cut -d ' ' -f3,5,7,9,11,13,15 | sed s/,//g | sed s/%//g`
+REPATTEMPTED=`echo $SWIFTRECON | tr '~' '\n' | grep replication_attempted | cut -d ' ' -f3,5,7,9,11,13,15 | sed s/,//g | sed s/%//g`
+
+echo $REPFAILURE | tr ' ' '\n'
+echo $REPSUCCESS | tr ' ' '\n'
+echo $REPTIME | tr ' ' '\n'
+echo $REPATTEMPTED | tr ' ' '\n'
+
+
+## Disk Space
+
+#Disk usage: space used: 7734898688 of 52750913961984
+
+SWIFTRECON=`swift-recon -d | tr '\n' '~'`
+
+SPACEUSED=`echo $SWIFTRECON | tr '~' '\n' | grep "space used" | cut -d ' ' -f5`
+SPACEMAX=`echo $SWIFTRECON | tr '~' '\n' | grep "space used" | cut -d ' ' -f7`
+
+echo $SPACEUSED
+echo $SPACEMAX
